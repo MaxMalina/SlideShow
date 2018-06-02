@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
                     val videoView = VideoView(this)
                     videoView.setVideoPath(photo.path)
                     viewFlipper.addView(videoView)
+                    videoView.start()
                 }
             }
         })
@@ -53,7 +54,7 @@ class MainActivity : AppCompatActivity() {
         viewFlipper.outAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_out)
 
         viewFlipper.isAutoStart = true
-        viewFlipper.setFlipInterval(3000)
+        viewFlipper.setFlipInterval(5000)
         viewFlipper.startFlipping()
     }
 }
