@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.VideoView
@@ -27,18 +28,24 @@ class MainActivity : AppCompatActivity() {
 
         photoViewModel!!.getAllPhotos().observe(this, Observer { photos: List<Media>? ->
             for(photo in photos!!) {
-                if(photo.mediaType == MediaType.IMAGE) {
-                    val imageView = ImageView(this)
-                    imageView.scaleType = ImageView.ScaleType.FIT_CENTER
 
-                    Picasso.get().load("file:///" + photo.path).into(imageView)
-                    viewFlipper.addView(imageView)
-                } else {
-                    val videoView = VideoView(this)
-                    videoView.setVideoPath(photo.path)
-                    viewFlipper.addView(videoView)
-                    videoView.start()
+                var mediaView = View(this)
+                when(photo.mediaType) {
+                    MediaType.IMAGE -> {
+                        mediaView = ImageView(this)
+                        mediaView.scaleType = ImageView.ScaleType.FIT_CENTER
+                        Picasso.get().load("file:///" + photo.path).into(mediaView)
+                        viewFlipper.addView(mediaView)
+                    }
+
+                    MediaType.VIDEO -> {
+                        mediaView = VideoView(this)
+                        mediaView.setVideoPath(photo.path)
+                        mediaView.start()
+                        viewFlipper.addView(mediaView)
+                    }
                 }
+                viewFlipper.addView(mediaView)
             }
         })
 
@@ -54,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         viewFlipper.outAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_out)
 
         viewFlipper.isAutoStart = true
-        viewFlipper.setFlipInterval(5000)
+        viewFlipper.setFlipInterval(3000)
         viewFlipper.startFlipping()
     }
 }
